@@ -22,6 +22,12 @@ database.once('connected', () => {
 app.use(express.json());
 app.use('/api', routes)
 
+app.set('view engine', 'ejs');
+
+app.get('/', (req, res) => {
+    res.render('index', { title: 'My First EJS Page' });
+});
+
 app.listen(3000, () => {
     console.log(`Server Started at ${3000}`)
 })
