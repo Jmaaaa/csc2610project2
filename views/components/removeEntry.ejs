@@ -1,30 +1,40 @@
 <%- include('lotSelector', { id: "remove" }) %>
 
+<div class="container my-2">
+    <button id="remove" class="btn btn-danger">Remove</button>
+</div>
+
 <script>
+var lotToRemove = null;
+var lotIdToRemove = null;
+
+let removeButton = $('#remove');
+
 function removeSelectLot(type, lot, lotId) {
     console.log(`remove select ${type}, ${lot} ${lotId}`);
-}
-</script>
+    lotToRemove = lot;
+    lotIdToRemove = lot ? lotId : null;
 
-<div class="container my-4">
-    <form action="/remove" method="POST">
-        <div class="form-group">
-            <label>Parking Area Name</label>
-            <input type="text" class="form-control" name="lot_type" required>
-        </div >
-        <div class="form-group">
-            <label>Lot Name</label>
-            <input type="text" class="form-control" name="lot_name" required>
-        </div >
-        <div class="form-group">
-            <label>Lot Number</label>
-            <input type="text" class="form-control" name="lot_num"required>
-        </div >
-        <div class="form-group">
-            <label>Total Spaces</label>
-            <input type="text" class="form-control" name="total_spaces" required>
-        </div >
-        
-        <button type="submit" class="btn btn-primary mt-2">Remove</button>
-    </form>
-</div>
+    if (lotToRemove) {
+        removeButton.removeClass('disabled');
+    }
+    else {
+        removeButton.addClass('disabled');
+    }
+}
+
+removeButton.addClass('disabled');
+removeButton.click(function () {
+    if (!lotIdToRemove)
+    return;
+
+    console.log('delete ' + lotIdToRemove);
+    fetch(`api/delete/${lotIdToRemove}`, {
+        method: 'DELETE'
+    }).then(res => {
+        // Go to home page.
+        window.location.replace("/");
+    });
+});
+</script>
+    

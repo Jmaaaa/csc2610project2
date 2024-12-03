@@ -108,7 +108,7 @@ function updateLot() {
                 percentFull: [null, null, null, null]
             };
         }
-        
+
         curLotData.days[dayName].percentFull = times;
     }
 
@@ -137,7 +137,7 @@ function updateSelectLot(type, lot, lotId) {
         fetch(`api/get/${lotId}`)
             .then(res => res.json())
             .then(json => {
-                console.log(JSON.stringify(json));
+                // console.log(JSON.stringify(json));
                 curLotData = json;
                 
                 for (const dayName of lotDays) {

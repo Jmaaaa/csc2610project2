@@ -107,8 +107,8 @@ const dataSchema = new mongoose.Schema({
     }
 }, {
     query: {
-        byType(type) {
-          return this.where({ lotType: new RegExp(type, 'i') });
+        byType(type, filter='') {
+          return this.where({ lotType: new RegExp(type, 'i'), lotName: new RegExp(filter, 'i') });
         },
     }
 });

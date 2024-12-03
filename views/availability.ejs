@@ -10,7 +10,12 @@
       <div class="d-flex flex-column h-100">
         <%- include('components/navbar') %>
 
-        <div class="parking container">
+        <div class="container">
+          <div class="search mt-5 mb-3">
+            <input type="text" class="form-control" id='searchbar' placeholder="Search..."></input>
+          </div>
+          <div class="parking">
+          </div>
         </div>
 
       </div>
@@ -24,10 +29,14 @@
           'Friday'
         ];
 
-        function getParkingForDay(parent, type, day) {
-          fetch(`api/getParking/${type}/${day}`)
+        function getParkingForDay(filter, parent, type, day) {
+          return fetch(`api/getParking/${type}/${day}?filter=${filter}`)
             .then((res) => res.json())
             .then((json) => {
+              if (json.length === 0) {
+                return false;
+              }
+
               // console.log(JSON.stringify(json));
               let table = $(`<table class='table'></table>`);
 
@@ -66,21 +75,25 @@
               table.append(tbody);
 
               parent.append(table);
+              return true;
             });
         }
 
-        function addParkingType(type) {
+        function addParkingType(filter, type) {
           let parent = $(".parking");
 
-          let group = $(`<div class='container m-2 p-4'>
+          let group = $(`<div class='container border rounded mb-4 p-4'>
               <h2 class='mb-3'>${type}</h2>
             </div>`);
 
           let dayIndex = 0;
+          let anyHadParking = false;
+          let promiseIndex = 0;
           for (const day of days) {
             let card = $(`<div class='card mt-1'></div>`);
             let cardHeader = $(`<h5 class='card-header'>${day}</h5>`);
-            
+            card.append(cardHeader);
+
             let curDayIndex = dayIndex;
             cardHeader.click(() => {
               let body = card.find('.card-body');
@@ -88,33 +101,67 @@
                 // Toggle body visibility.
                 body.collapse('toggle');
               }
-              else {
-                console.log('create body');
+              // else {
                 // Create the body and populate the values.
-                let cardBody = $("<div class='card-body collapse table-responsive'></div>");
-                getParkingForDay(cardBody, type, day);
-                cardBody.collapse('toggle');
-                card.append(cardBody);
-              }
+                // let cardBody = $("<div class='card-body collapse table-responsive'></div>");
+                // getParkingForDay(cardBody, type, day);
+                // cardBody.collapse('toggle');
+                // card.append(cardBody);
+              // }
             });
 
-            card.append(cardHeader);
+            let cardBody = $("<div class='card-body collapse table-responsive'></div>");
+
+            promiseIndex++;
+            let promiseHasParking = getParkingForDay(filter, cardBody, type, day);
+
+            if (filter) {
+              cardBody.collapse('toggle');
+            }
+            
+            card.append(cardBody);
+
+            
             // card.append(cardBody);
-            group.append(card);
+            // group.append(card);
             dayIndex++;
+
+            promiseHasParking.then(hadParking => {
+              if (hadParking) {
+                group.append(card);
+
+                if (!anyHadParking) {
+                  anyHadParking = true;
+                  parent.append(group);
+                }
+              }
+            });
           }
 
-          parent.append(group);
+          // parent.append(group);
         }
 
-        fetch('api/getTypes').then((res) => {
-        return res.json();
-          })
-          .then((json) => {
-              for (const parkingType of json) {
-                addParkingType(parkingType);
-              }
-          });
+        function updateParking(filter) {
+          fetch('api/getTypes').then((res) => {
+          return res.json();
+            })
+            .then((json) => {
+                $(".parking").empty();
+          
+                for (const parkingType of json) {
+                  addParkingType(filter, parkingType);
+                }
+            });
+        }
+        updateParking('');
+
+        let searchbar = $('#searchbar');
+        searchbar.keyup(function () {
+          console.log('search ' + searchbar.val());
+          updateParking(searchbar.val().trim());
+        });
+
+
       </script>
     </body>
 </html>

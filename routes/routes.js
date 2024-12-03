@@ -67,7 +67,7 @@ router.get('/getLots/:type', async (req, res) => {
 
 router.get('/getParking/:type/:day', async (req, res) => {
     try{
-        let data = await Model.find().byType(req.params.type);
+        let data = await Model.find().byType(req.params.type, req.query.filter ?? '');
         
         // Return values for a specific day.
         data = data.map(lot => {
@@ -124,8 +124,11 @@ router.patch('/update/:id', async (req, res) => {
 router.delete('/delete/:id', async (req, res) => {
     try {
         const id = req.params.id;
-        const data = await Model.findByIdAndDelete(id)
-        res.send(`Document with ${data.name} has been deleted..`)
+        console.log('delete '+ id);
+        const data = await Model.findByIdAndDelete(id);
+        // res.send(`Document with ${data.name} has been deleted..`)
+        res.send(`deleted ${data.name}!`);
+        // res.status(200);
     }
     catch (error) {
         res.status(400).json({ message: error.message })
