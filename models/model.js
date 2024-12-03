@@ -24,6 +24,12 @@ const dataSchema = new mongoose.Schema({
         day: String,
         percentFull: [Number]
     }]
-})
+}, {
+    query: {
+        byType(type) {
+          return this.where({ lotType: new RegExp(type, 'i') });
+        }
+    }
+});
 
 module.exports = mongoose.model('Parking', dataSchema, 'parking')

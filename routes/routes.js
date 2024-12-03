@@ -32,6 +32,16 @@ router.get('/getAll', async (req, res) => {
     }
 })
 
+router.get('/getType/:type', async (req, res) => {
+    try{
+        const data = await Model.find().byType(req.params.type);
+        res.json(data)
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
+})
+
 //Get by ID Method
 router.get('/getOne/:id', async (req, res) => {
     try{
