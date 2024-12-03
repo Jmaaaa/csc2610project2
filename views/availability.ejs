@@ -121,14 +121,18 @@
             
             card.append(cardBody);
 
-            
+            let dummy = $('<div></div>');
+            group.append(dummy);
+
             // card.append(cardBody);
             // group.append(card);
+            
             dayIndex++;
 
             promiseHasParking.then(hadParking => {
               if (hadParking) {
-                group.append(card);
+                // group.append(card);
+                dummy.append(card);
 
                 if (!anyHadParking) {
                   anyHadParking = true;
