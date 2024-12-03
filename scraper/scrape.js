@@ -27,10 +27,14 @@ function parseLot(data) {
 }
 
 function parseDay(data) {
+    const dayName = data.querySelector('button').textContent.trim();
     const rows = data.querySelectorAll('tr');
     // console.log(`${rows.length} rows`);
 
-    return Array.from(rows).slice(1).map(x => parseLot(x));
+    return {
+        day: dayName,
+        availability: Array.from(rows).slice(1).map(x => parseLot(x))
+    };
 }
 
 function parseParking(data) {
@@ -55,10 +59,24 @@ https.get('https://www.lsu.edu/parking/availability.php', function(res) {
         console.log(`${sections.length} sections`);
         
         const output = {
-            commuter: parseParking(sections[0]),
-            residential: parseParking(sections[1]),
-            greek: parseParking(sections[2]),
-            b_permit: parseParking(sections[3]),
+            "types": [
+                {
+                    name: "Commuter Permit Parking",
+                    days: parseParking(sections[0])
+                },
+                {
+                    name: "Residential Permit Parking",
+                    days: parseParking(sections[1])
+                },
+                {
+                    name: "Greek Permit Parking",
+                    days: parseParking(sections[2])
+                },
+                {
+                    name: "B Permit Parking",
+                    days: parseParking(sections[3])
+                }
+            ]
         };
 
         fs.writeFile('scraper/data.json', JSON.stringify(output), 'utf8', () => {

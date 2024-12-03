@@ -6,7 +6,7 @@ const routes = require('./routes/routes');
 
 const app = express();
 
-const mongoString = process.env.DATABASE_URL
+const mongoString = process.env.DATABASE_URL + 'data'
 mongoose.connect(mongoString);
 const database = mongoose.connection
 
