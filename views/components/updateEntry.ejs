@@ -1,7 +1,7 @@
 <%- include('lotSelector', { id: "update" }) %>
 
 <div class="table-responsive mt-4" id="time-table">
-    <label>Parking Occupancy (%)</label>
+    <h2 class="mb-4">Parking Occupancy (%)</h2>
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -32,68 +32,72 @@
                 { id:'2pm', name: '2:00 pm' },
                 { id:'4pm', name: '4:00 pm' },
             ]; %>
-            
-<!-- 
-            <tr id="7am">
-                <th>7:00 am</th>
-                <td><input type="text" name="7am_monday" class="form-control" required></td>
-                <td><input type="text" name="7am_tueday" class="form-control" required></td>
-                <td><input type="text" name="7am_wednesday" class="form-control" required></td>
-                <td><input type="text" name="7am_thursday" class="form-control" required></td>
-                <td><input type="text" name="7am_friday" class="form-control" required></td>
-            </tr>
-            <tr id="11am">
-                <th>11:00 am</th>
-                <td><input type="text" name="11am_monday" class="form-control" required></td>
-                <td><input type="text" name="11am_tueday" class="form-control" required></td>
-                <td><input type="text" name="11am_wednesday" class="form-control" required></td>
-                <td><input type="text" name="11am_thursday" class="form-control" required></td>
-                <td><input type="text" name="11am_friday" class="form-control" required></td>
-            </tr>
-            <tr id="2pm">
-                <th>2:00 pm</th>
-                <td><input type="text" name="2pm_monday" class="form-control" required></td>
-                <td><input type="text" name="2pm_tueday" class="form-control" required></td>
-                <td><input type="text" name="2pm_wednesday" class="form-control" required></td>
-                <td><input type="text" name="2pm_thursday" class="form-control" required></td>
-                <td><input type="text" name="2pm_friday" class="form-control" required></td>
-            </tr>
-            <tr id="4pm">
-                <th>4:00 pm</th>
-                <td><input type="text" name="4pm_monday" class="form-control" required></td>
-                <td><input type="text" name="4pm_tueday" class="form-control" required></td>
-                <td><input type="text" name="4pm_wednesday" class="form-control" required></td>
-                <td><input type="text" name="4pm_thursday" class="form-control" required></td>
-                <td><input type="text" name="4pm_friday" class="form-control" required></td>
-            </tr> -->
+
+            <% for (const time of times) { %>
+                <tr id="<%= time.id %>">
+                <th><%= time.name %></th>
+                <% for (const day of days) { %>
+                    <td class="p-3">
+                        <div class="d-flex flex-row align-items-center">
+                            <input type="text" name="<%= time.id %>_<%= day %>" id="<%= time.id %>-<%= day %>" class="form-control flex-grow-0 text-end" placeholder="No Data" required>
+                            <label for="<%= time.id %>_<%= day %>" class="flex-grow-0 flex-shrink-0 ms-2">% Full</label>
+                        </div>
+
+                    </td>
+                <% } %>
+                </tr>
+            <% } %>
         </tbody>
     </table>
 </div>
+
+<button class="btn btn-primary" id="update-times">Update</button>
 
 
 <script>
 let table = $('#time-table');
 table.hide();
 
+let updateTimes = $('#update-times');
+updateTimes.hide();
+
 function updateSelectLot(type, lot, lotId) {
     console.log(`update select ${type}, ${lot} ${lotId}`);
+    let times = [
+        '7am',
+        '11am',
+        '2pm',
+        '4pm',
+    ];
 
     if (type && lot) {
         table.show();
+        updateTimes.show();
 
         // Fill in the current time data.
         fetch(`api/get/${lotId}`)
             .then(res => res.json())
             .then(json => {
-                console.log(JSON.stringify(json));
-                for (const dayName of json) {
-                    let id = `${dayName.toLowerCase()}`;
-                    json[day]
+                for (const [dayName, day] of Object.entries(json.days)) {
+                    if (!day.percentFull)
+                        continue;
+                    
+                    for (let iTime = 0; iTime < times.length; ++iTime) {
+                        let time = times[iTime];
+                        let box = $(`#${time}-${dayName}`);
+
+                        if (day.percentFull[iTime])
+                            box.val(day.percentFull[iTime]);
+
+                        // console.log(day.percentFull[iTime]);
+                    }
+                    // json[day]
                 }
             });
     }
     else {
         table.hide();
+        updateTimes.hide();
     }
 }
 </script>
