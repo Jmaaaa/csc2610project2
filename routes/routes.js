@@ -16,10 +16,11 @@ router.post('/addLot', async (req, res) => {
 
     try{
         const dataToSave = data.save();
-        res.status(200).json(dataToSave)
+        res.redirect('/');
+        // res.status(200).json(dataToSave);
     }
     catch(error){
-        res.status(400).json({message: error.message})
+        res.status(400).json({message: error.message});
     }
 })
 
@@ -44,6 +45,26 @@ router.get('/getAll', async (req, res) => {
     }
 })
 
+router.get('/getLots/:type', async (req, res) => {
+    try{
+        let data = await Model.find().byType(req.params.type);
+
+        let names = [];
+        for (const lot of data)
+        {
+            names.push({
+                id: lot.id,
+                name: lot.lotName
+            });
+        }
+
+        res.json(names);
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
+});
+
 router.get('/getParking/:type/:day', async (req, res) => {
     try{
         let data = await Model.find().byType(req.params.type);
@@ -52,8 +73,9 @@ router.get('/getParking/:type/:day', async (req, res) => {
         data = data.map(lot => {
             // deep clone.
             let newLot = JSON.parse(JSON.stringify(lot));
+            newLot.day = newLot.days[req.params.day];
             delete newLot.days;
-            newLot.day = lot.days[req.params.day];
+            // console.log(req.params.day + " == " + Object.keys(lot.days));
             return newLot;
         });
 
@@ -62,10 +84,10 @@ router.get('/getParking/:type/:day', async (req, res) => {
     catch(error){
         res.status(500).json({message: error.message})
     }
-})
+});
 
 //Get by ID Method
-router.get('/getOne/:id', async (req, res) => {
+router.get('/get/:id', async (req, res) => {
     try{
         const data = await Model.findById(req.params.id);
         res.json(data)

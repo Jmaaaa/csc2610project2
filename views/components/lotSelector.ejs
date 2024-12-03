@@ -1,0 +1,71 @@
+<div class="dropdown my-2">
+    <button style="width: 100%;" class="btn btn-secondary dropdown-toggle" id="lottype-name-<%= id %>" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Select Lot Type
+    </button>
+    <ul style="width: 100%;" class="dropdown-menu" id="lottype-items-<%= id %>">
+    </ul>
+</div>
+
+<div class="dropdown my-2">
+    <button style="width: 100%;" class="btn btn-secondary dropdown-toggle disabled" id="lot-name-<%= id %>" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Select Lot
+    </button>
+    <ul style="width: 100%;" class="dropdown-menu overflow-auto" style="max-height: 40rem;" id="lot-items-<%= id %>">
+    </ul>
+</div>
+
+<script>
+{
+    let hasLotType = null;
+    let hasLot = null;
+
+    function setLot(lot, lotId) {
+        $('#lot-name-<%= id %>').text(lot);
+        hasLot = lot;
+
+        // Callback.
+        <%= id %>SelectLot(hasLotType, hasLot, lotId);
+    }
+
+    function setLotType(type) {
+        $('#lottype-name-<%= id %>').text(type);
+        hasLotType = type;
+        hasLot = null;
+
+        // Callback.
+        <%= id %>SelectLot(hasLotType, hasLot,);
+
+        let lotSelector = $('#lot-name-<%= id %>');
+        let lotItems = $('#lot-items-<%= id %>');
+
+        lotSelector.text("Select Lot");
+
+        // Update lot name list.
+        lotSelector.removeClass('disabled');
+
+        // Clear lot name entries.
+        lotItems.empty();
+
+        fetch(`api/getLots/${hasLotType}`)
+            .then(res => res.json())
+            .then(json => {;
+                for (const lot of json) {
+                    let item = $(`<li><a class="dropdown-item" href="#">${lot.name}</a></li>`);
+                    lotItems.append(item);
+                    item.click(() => setLot(lot.name, lot.id));
+                }
+            });
+    }
+
+    fetch('api/getTypes')
+        .then(res => res.json())
+        .then(json => {
+            let items = $('#lottype-items-<%= id %>');
+            for (const type of json) {
+                let item = $(`<li><a class="dropdown-item" href="#">${type}</a></li>`);
+                items.append(item);
+                item.click(() => setLotType(type));
+            }
+        });
+}
+</script>

@@ -20,6 +20,7 @@ database.once('connected', () => {
 })
 
 app.use(express.json());
+app.use(express.urlencoded());
 app.use('/api', routes)
 
 app.set('view engine', 'ejs');

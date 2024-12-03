@@ -79,20 +79,21 @@
           let dayIndex = 0;
           for (const day of days) {
             let card = $(`<div class='card mt-1'></div>`);
-            let cardHeader = $(`<div class='card-header'><button class='btn'>${day}</div></div>`);
+            let cardHeader = $(`<h5 class='card-header'>${day}</h5>`);
             
             let curDayIndex = dayIndex;
             cardHeader.click(() => {
               let body = card.find('.card-body');
               if (body.length !== 0) {
                 // Toggle body visibility.
-                body.toggle();
+                body.collapse('toggle');
               }
               else {
                 console.log('create body');
                 // Create the body and populate the values.
-                let cardBody = $("<div class='card-body'></div>");
+                let cardBody = $("<div class='card-body collapse'></div>");
                 getParkingForDay(cardBody, type, day);
+                cardBody.collapse('toggle');
                 card.append(cardBody);
               }
             });

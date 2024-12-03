@@ -1,3 +1,11 @@
+<%- include('lotSelector', { id: "remove" }) %>
+
+<script>
+function removeSelectLot(type, lot, lotId) {
+    console.log(`remove select ${type}, ${lot} ${lotId}`);
+}
+</script>
+
 <div class="container my-4">
     <form action="/remove" method="POST">
         <div class="form-group">

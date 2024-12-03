@@ -1,20 +1,20 @@
 <div class="container my-4">
-    <form action="/submit" method="POST">
+    <form action="/api/addLot" method="POST">
         <div class="form-group">
             <label>Parking Area Name</label>
-            <input type="text" class="form-control" name="lot_type" required>
+            <input type="text" class="form-control" name="lotType" id="lotType" required>
         </div >
         <div class="form-group">
             <label>Lot Name</label>
-            <input type="text" class="form-control" name="lot_name" required>
+            <input type="text" class="form-control" name="lotName" id="lotName" required>
         </div >
         <div class="form-group">
             <label>Lot Number</label>
-            <input type="text" class="form-control" name="lot_num"required>
+            <input type="text" class="form-control" name="lotNumber" id="lotNumber" required>
         </div >
         <div class="form-group">
             <label>Total Spaces</label>
-            <input type="text" class="form-control" name="total_spaces" required>
+            <input type="number" class="form-control" name="totalSpaces" id="totalSpaces" required>
         </div >
         
         <button type="submit" class="btn btn-primary mt-2">Submit</button>

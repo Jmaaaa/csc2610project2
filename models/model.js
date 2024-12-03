@@ -33,7 +33,52 @@ const dataSchema = new mongoose.Schema({
         required: true
     },
     days: {
-        percentFull: [Number]
+        // Monday: {
+        //     percentFull: {
+        //         type:[Number],
+        //         default: [null, null, null, null]
+        //     }
+        // },
+        // Tuesday: {
+        //     percentFull: {
+        //         type:[Number],
+        //         default: [null, null, null, null]
+        //     }
+        // },
+        // Wednesday: { 
+        //     percentFull: {
+        //         type: [Number], 
+        //         default: [null, null, null, null] 
+                
+        //     }
+        // },
+        // Thursday: {
+        //     percentFull: {
+        //         type:[Number],
+        //         default: [null, null, null, null]
+        //     }
+        // },
+        // Friday: { 
+        //     percentFull: {
+        //         type:[Number], 
+        //         default: [null, null, null, null] 
+        //     }
+        // }
+        
+        type: Map,
+        of: {
+            percentFull: {
+                type: [Number],
+                default: [null, null, null, null]
+            }
+        },
+        default: () => ({
+            Monday: { percentFull: [null, null, null, null] },
+            Tuesday: { percentFull: [null, null, null, null] },
+            Wednesday: { percentFull: [null, null, null, null] },
+            Thursday: { percentFull: [null, null, null, null] },
+            Friday: { percentFull: [null, null, null, null] },
+        })
     }
 }, {
     query: {
