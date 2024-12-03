@@ -28,7 +28,7 @@ const dataSchema = new mongoose.Schema({
     query: {
         byType(type) {
           return this.where({ lotType: new RegExp(type, 'i') });
-        }
+        },
     }
 });
 

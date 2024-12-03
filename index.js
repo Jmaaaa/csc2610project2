@@ -25,8 +25,18 @@ app.use('/api', routes)
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-    res.render('index', { title: 'My First EJS Page' });
+    res.redirect('/availability');
 });
+
+app.get('/availability', (req, res) => {
+    res.render('availability', { page:'availability' });
+});
+
+app.get('/admin', (req, res) => {
+    res.render('admin', { page:'admin' });
+});
+
+
 
 app.listen(3000, () => {
     console.log(`Server Started at ${3000}`)

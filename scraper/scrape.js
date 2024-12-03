@@ -14,8 +14,8 @@ var allLots = {};
 function parseLot(sectionName, dayName, data) {
     const td = data.querySelectorAll('td');
 
-    const lotName = td[0].textContent.trim();
-    const lotNumber = td[1].textContent.trim();
+    const lotName = td[0].textContent.trim().replace('  ', ' ');
+    const lotNumber = td[1].textContent.trim().replace('  ', ' ');
     const totalSpaces = parseInt(td[2].textContent);
     const percentFull = Array.from(td).slice(3).map(x => parseInt(x.textContent));
 

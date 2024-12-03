@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Availability</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <%- include('components/bootstrap') %>
+    </head>
+    <body>
+      <div class="d-flex flex-column h-100">
+        <%- include('components/navbar') %>
+
+        <div class="parking container">
+        </div>
+
+      </div>
+
+      <script>
+        const days = [
+          'Monday',
+          'Tuesday',
+          'Wednesday',
+          'Thursday',
+          'Friday'
+        ];
+
+        function getParkingForDay(parent, type, day) {
+          fetch(`api/getParking/${type}/${day}`)
+            .then((res) => res.json())
+            .then((json) => {
+              // console.log(JSON.stringify(json));
+              let table = $(`<table class='table'></table>`);
+
+              // Add header.
+              let header = $(`<thead>
+                <tr>
+                  <th scope='col'>Lot Name</th>
+                  <th scope='col'>Lot Number</th>
+                  <th scope='col'>Total Spaces</th>
+                  <th scope='col'>7:00 am</th>
+                  <th scope='col'>11:00 am</th>
+                  <th scope='col'>2:00 pm</th>
+                  <th scope='col'>4:00 pm</th>
+                </tr>
+              </thead>`);
+              table.append(header);
+
+              let tbody = $(`<tbody></tbody>`);
+              
+              for (const lot of json) {
+                console.log(JSON.stringify(lot));
+                let row = $(`<tr>
+                  <td>${lot.lotName}</td>
+                  <td>${lot.lotNumber}</td>
+                  <td>${lot.totalSpaces}</td>
+                  <td>${(lot.day.percentFull[0] ?? "No Data")}</td>
+                  <td>${(lot.day.percentFull[1] ?? "No Data")}</td>
+                  <td>${(lot.day.percentFull[2] ?? "No Data")}</td>
+                  <td>${(lot.day.percentFull[3] ?? "No Data")}</td>
+                </tr>`);
+                tbody.append(row);
+              }
+              table.append(tbody);
+
+              parent.append(table);
+            });
+        }
+
+        function addParkingType(type) {
+          let parent = $(".parking");
+
+          let group = $(`<div class='container m-2 p-4'>
+              <h2 class='mb-3'>${type}</h2>
+            </div>`);
+
+          let dayIndex = 0;
+          for (const day of days) {
+            let card = $(`<div class='card mt-1'></div>`);
+            let cardHeader = $(`<div class='card-header'><button class='btn'>${day}</div></div>`);
+            
+            let curDayIndex = dayIndex;
+            cardHeader.click(() => {
+              let body = card.find('.card-body');
+              if (body.length !== 0) {
+                // Toggle body visibility.
+                body.toggle();
+              }
+              else {
+                console.log('create body');
+                // Create the body and populate the values.
+                let cardBody = $("<div class='card-body'></div>");
+                getParkingForDay(cardBody, type, curDayIndex);
+                card.append(cardBody);
+              }
+            });
+
+            card.append(cardHeader);
+            // card.append(cardBody);
+            group.append(card);
+            dayIndex++;
+          }
+
+          parent.append(group);
+        }
+
+        fetch('api/getTypes').then((res) => {
+        return res.json();
+          })
+          .then((json) => {
+              for (const parkingType of json) {
+                addParkingType(parkingType);
+              }
+          });
+      </script>
+    </body>
+</html>

@@ -21,6 +21,16 @@ router.post('/post', async (req, res) => {
     }
 })
 
+router.get('/getTypes', async (req, res) => {
+    try{
+        types = await Model.distinct('lotType');
+        res.json(types);
+    }
+    catch(error){
+        res.status(500).json({message: error.message})
+    }
+});
+
 //Get all Method
 router.get('/getAll', async (req, res) => {
     try{
@@ -32,10 +42,21 @@ router.get('/getAll', async (req, res) => {
     }
 })
 
-router.get('/getType/:type', async (req, res) => {
+router.get('/getParking/:type/:day', async (req, res) => {
     try{
-        const data = await Model.find().byType(req.params.type);
-        res.json(data)
+        let data = await Model.find().byType(req.params.type);
+        
+        // Return values for a specific day.
+        let dayIndex = parseInt(req.params.day);
+        data = data.map(lot => {
+            // deep clone.
+            let newLot = JSON.parse(JSON.stringify(lot));
+            delete newLot.days;
+            newLot.day = lot.days[dayIndex];
+            return newLot;
+        });
+
+        res.json(data);
     }
     catch(error){
         res.status(500).json({message: error.message})
