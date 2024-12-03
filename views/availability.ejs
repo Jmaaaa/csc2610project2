@@ -48,15 +48,18 @@
               let tbody = $(`<tbody></tbody>`);
               
               for (const lot of json) {
-                console.log(JSON.stringify(lot));
+                if (!lot.day)
+                  continue;
+                
+                // console.log(JSON.stringify(lot));
                 let row = $(`<tr>
                   <td>${lot.lotName}</td>
                   <td>${lot.lotNumber}</td>
                   <td>${lot.totalSpaces}</td>
-                  <td>${(lot.day.percentFull[0] ?? "No Data")}</td>
-                  <td>${(lot.day.percentFull[1] ?? "No Data")}</td>
-                  <td>${(lot.day.percentFull[2] ?? "No Data")}</td>
-                  <td>${(lot.day.percentFull[3] ?? "No Data")}</td>
+                  <td>${(lot.day.percentFull[0] ? lot.day.percentFull[0] + "% Full" : "No Data")}</td>
+                  <td>${(lot.day.percentFull[1] ? lot.day.percentFull[1] + "% Full" : "No Data")}</td>
+                  <td>${(lot.day.percentFull[2] ? lot.day.percentFull[2] + "% Full" : "No Data")}</td>
+                  <td>${(lot.day.percentFull[3] ? lot.day.percentFull[3] + "% Full" : "No Data")}</td>
                 </tr>`);
                 tbody.append(row);
               }
@@ -89,7 +92,7 @@
                 console.log('create body');
                 // Create the body and populate the values.
                 let cardBody = $("<div class='card-body'></div>");
-                getParkingForDay(cardBody, type, curDayIndex);
+                getParkingForDay(cardBody, type, day);
                 card.append(cardBody);
               }
             });

@@ -6,11 +6,13 @@ module.exports = router;
 
 
 //Post Method
-router.post('/post', async (req, res) => {
+router.post('/addLot', async (req, res) => {
     const data = new Model({
-        name: req.body.name,
-        age: req.body.age
-    })
+        lotType: req.body.lotType,
+        lotName: req.body.lotName,
+        lotNumber: req.body.lotNumber,
+        totalSpaces: req.body.totalSpaces,
+    });
 
     try{
         const dataToSave = data.save();
@@ -47,12 +49,11 @@ router.get('/getParking/:type/:day', async (req, res) => {
         let data = await Model.find().byType(req.params.type);
         
         // Return values for a specific day.
-        let dayIndex = parseInt(req.params.day);
         data = data.map(lot => {
             // deep clone.
             let newLot = JSON.parse(JSON.stringify(lot));
             delete newLot.days;
-            newLot.day = lot.days[dayIndex];
+            newLot.day = lot.days[req.params.day];
             return newLot;
         });
 

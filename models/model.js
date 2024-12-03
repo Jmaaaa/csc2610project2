@@ -16,14 +16,25 @@ const mongoose = require('mongoose');
 // })
 
 const dataSchema = new mongoose.Schema({
-    lotType: String,
-    lotName: String,
-    lotNumber: String,
-    totalSpaces: Number,
-    days: [{
-        day: String,
+    lotType: { 
+        type: String,
+        required: true
+    },
+    lotName: { 
+        type: String,
+        required: true
+    },
+    lotNumber: { 
+        type: String,
+        required: true
+    },
+    totalSpaces: { 
+        type: Number,
+        required: true
+    },
+    days: {
         percentFull: [Number]
-    }]
+    }
 }, {
     query: {
         byType(type) {
@@ -31,5 +42,6 @@ const dataSchema = new mongoose.Schema({
         },
     }
 });
+
 
 module.exports = mongoose.model('Parking', dataSchema, 'parking')

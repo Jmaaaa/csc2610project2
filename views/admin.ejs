@@ -9,80 +9,29 @@
     <body>
       <div class="d-flex flex-column h-100">
         <%- include('components/navbar') %>
-        <div class="container my-4">
-            <form action="/submit" method="POST">
-                <div class="form-group">
-                    <label>Parking Area Name</label>
-                    <input type="text" class="form-control" name="lot_type" required>
-                </div >
-                <div class="form-group">
-                    <label>Lot Name</label>
-                    <input type="text" class="form-control" name="lot_name" required>
-                </div >
-                <div class="form-group">
-                    <label>Lot Number</label>
-                    <input type="text" class="form-control" name="lot_num"required>
-                </div >
-                <div class="form-group">
-                    <label>Total Spaces</label>
-                    <input type="text" class="form-control" name="total_spaces" required>
-                </div >
-                <div>
-                    <label>Parking Occupancy (%)</label>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th colspan="5">Days</th>
-                            </tr>
-                            <tr>
-                                <th>Times</th>
-                                <th>Monday</th>
-                                <th>Tuesday</th>
-                                <th>Wednesday</th>
-                                <th>Thursday</th>
-                                <th>Friday</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr id="7am">
-                                <th>7:00 am</th>
-                                <td><input type="text" name="7am_monday" class="form-control" required></td>
-                                <td><input type="text" name="7am_tueday" class="form-control" required></td>
-                                <td><input type="text" name="7am_wednesday" class="form-control" required></td>
-                                <td><input type="text" name="7am_thursday" class="form-control" required></td>
-                                <td><input type="text" name="7am_friday" class="form-control" required></td>
-                            </tr>
-                            <tr id="11am">
-                                <th>11:00 am</th>
-                                <td><input type="text" name="11am_monday" class="form-control" required></td>
-                                <td><input type="text" name="11am_tueday" class="form-control" required></td>
-                                <td><input type="text" name="11am_wednesday" class="form-control" required></td>
-                                <td><input type="text" name="11am_thursday" class="form-control" required></td>
-                                <td><input type="text" name="11am_friday" class="form-control" required></td>
-                            </tr>
-                            <tr id="2pm">
-                                <th>2:00 pm</th>
-                                <td><input type="text" name="2pm_monday" class="form-control" required></td>
-                                <td><input type="text" name="2pm_tueday" class="form-control" required></td>
-                                <td><input type="text" name="2pm_wednesday" class="form-control" required></td>
-                                <td><input type="text" name="2pm_thursday" class="form-control" required></td>
-                                <td><input type="text" name="2pm_friday" class="form-control" required></td>
-                            </tr>
-                            <tr id="4pm">
-                                <th>4:00 pm</th>
-                                <td><input type="text" name="4pm_monday" class="form-control" required></td>
-                                <td><input type="text" name="4pm_tueday" class="form-control" required></td>
-                                <td><input type="text" name="4pm_wednesday" class="form-control" required></td>
-                                <td><input type="text" name="4pm_thursday" class="form-control" required></td>
-                                <td><input type="text" name="4pm_friday" class="form-control" required></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+        
+        <div class="container mt-4">
+          <nav>
+            <div class="nav nav-pills justify-content-center" id="nav-tab" role="tablist">
+              <button class="nav-link active" id="nav-add-tab" data-bs-toggle="tab" data-bs-target="#nav-add" type="button" role="tab" aria-controls="nav-add" aria-selected="true">Add Lot</button>
+              <button class="nav-link" id="nav-update-tab" data-bs-toggle="tab" data-bs-target="#nav-update" type="button" role="tab" aria-controls="nav-update" aria-selected="false">Update Times</button>
+              <button class="nav-link" id="nav-remove-tab" data-bs-toggle="tab" data-bs-target="#nav-remove" type="button" role="tab" aria-controls="nav-remove" aria-selected="false">Remove Lot</button>
+            </div>
+          </nav>
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-add" role="tabpanel" aria-labelledby="nav-add-tab">
+              <%- include('components/addEntry') %>
+            </div>
+            <div class="tab-pane fade" id="nav-update" role="tabpanel" aria-labelledby="nav-update-tab">
+              <%- include('components/updateEntry') %>
+            </div>
+            <div class="tab-pane fade" id="nav-remove" role="tabpanel" aria-labelledby="nav-remove-tab">
+              <%- include('components/removeEntry') %>
+            </div>
+          </div>
         </div>
+
+
       </div>
     </body>
 </html>

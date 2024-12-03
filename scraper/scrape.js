@@ -34,14 +34,13 @@ function parseLot(sectionName, dayName, data) {
             lotName: lotName,
             lotNumber: lotNumber,
             totalSpaces: totalSpaces,
-            days: []
+            days: {}
         };
     }
 
-    allLots[lotName].days.push({
-        day: dayName,
+    allLots[lotName].days[dayName] = {
         percentFull: percentFull
-    });
+    };
 }
 
 function parseDay(sectionName, data) {
