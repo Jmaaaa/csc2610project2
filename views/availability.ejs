@@ -91,7 +91,7 @@
               else {
                 console.log('create body');
                 // Create the body and populate the values.
-                let cardBody = $("<div class='card-body collapse'></div>");
+                let cardBody = $("<div class='card-body collapse table-responsive'></div>");
                 getParkingForDay(cardBody, type, day);
                 cardBody.collapse('toggle');
                 card.append(cardBody);

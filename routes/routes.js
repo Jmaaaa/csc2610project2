@@ -100,15 +100,20 @@ router.get('/get/:id', async (req, res) => {
 //Update by ID Method
 router.patch('/update/:id', async (req, res) => {
     try {
+        // console.log(JSON.stringify(req.body));
+        // res.status(200);
+
         const id = req.params.id;
         const updatedData = req.body;
         const options = { new: true };
 
         const result = await Model.findByIdAndUpdate(
             id, updatedData, options
-        )
+        );
 
-        res.send(result)
+        res.send(result);
+        // res.redirect('/');
+
     }
     catch (error) {
         res.status(400).json({ message: error.message })

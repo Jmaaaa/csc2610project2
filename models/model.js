@@ -33,45 +33,70 @@ const dataSchema = new mongoose.Schema({
         required: true
     },
     days: {
-        // Monday: {
-        //     percentFull: {
-        //         type:[Number],
-        //         default: [null, null, null, null]
-        //     }
+        // type: Map,
+        // required: true,
+        // of: {
+        //     Monday: {
+        //         type: Map,
+        //         required: true,
+        //         of: {
+        //             percentFull: {
+        //                 type:[Number],
+        //                 default: [null, null, null, null]
+        //             }
+        //         }
+        //     },
+        //     Tuesday: {
+        //         type: Map,
+        //         required: true,
+        //         of: {
+        //             percentFull: {
+        //                 type:[Number],
+        //                 default: [null, null, null, null]
+        //             }
+        //         }
+        //     },
+        //     Wednesday: {
+        //         type: Map,
+        //         required: true,
+        //         of: {
+        //             percentFull: {
+        //                 type:[Number],
+        //                 default: [null, null, null, null]
+        //             }
+        //         }
+        //     },
+        //     Thursday: {
+        //         type: Map,
+        //         required: true,
+        //         of: {
+        //             percentFull: {
+        //                 type:[Number],
+        //                 default: [null, null, null, null]
+        //             }
+        //         }
+        //     },
+        //     Friday: {
+        //         type: Map,
+        //         required: true,
+        //         of: {
+        //             percentFull: {
+        //                 type:[Number],
+        //                 default: [null, null, null, null]
+        //             }
+        //         }
+        //     },
         // },
-        // Tuesday: {
-        //     percentFull: {
-        //         type:[Number],
-        //         default: [null, null, null, null]
-        //     }
-        // },
-        // Wednesday: { 
-        //     percentFull: {
-        //         type: [Number], 
-        //         default: [null, null, null, null] 
-                
-        //     }
-        // },
-        // Thursday: {
-        //     percentFull: {
-        //         type:[Number],
-        //         default: [null, null, null, null]
-        //     }
-        // },
-        // Friday: { 
-        //     percentFull: {
-        //         type:[Number], 
-        //         default: [null, null, null, null] 
-        //     }
-        // }
-        
+
         type: Map,
         of: {
             percentFull: {
                 type: [Number],
+                required: true,
                 default: [null, null, null, null]
             }
         },
+        required: true,
         default: () => ({
             Monday: { percentFull: [null, null, null, null] },
             Tuesday: { percentFull: [null, null, null, null] },

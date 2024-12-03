@@ -38,7 +38,7 @@
                 <th><%= time.name %></th>
                 <% for (const day of days) { %>
                     <td class="p-3">
-                        <div class="d-flex flex-row align-items-center">
+                        <div style="min-width: 7rem" class="d-flex flex-row align-items-center">
                             <input type="text" name="<%= time.id %>_<%= day %>" id="<%= time.id %>-<%= day %>" class="form-control flex-grow-0 text-end" placeholder="No Data" required>
                             <label for="<%= time.id %>_<%= day %>" class="flex-grow-0 flex-shrink-0 ms-2">% Full</label>
                         </div>
@@ -55,20 +55,79 @@
 
 
 <script>
+
+let lotDays = [
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+];
+
+let lotTimes = [
+    '7am',
+    '11am',
+    '2pm',
+    '4pm',
+];
+
 let table = $('#time-table');
 table.hide();
 
 let updateTimes = $('#update-times');
 updateTimes.hide();
 
+var curLotData = null;
+var lotIdToUpdate = null;
+function updateLot() {
+    for (const dayName of lotDays) {
+        let hasTimes = false;
+        let times = [null, null, null, null];
+
+        // if (dayName in json.days) {
+        //     const day = json.days[dayName];
+        //     if (day.percentFull) {
+        //         times = day.percentFull;
+        //     }
+        // }
+
+        for (let iTime = 0; iTime < times.length; ++iTime) {
+            let timeId = lotTimes[iTime];
+            let box = $(`#${timeId}-${dayName}`);
+            console.log(box.val());
+            let val = box.val();
+
+            if (val && !isNaN(val)) {
+                hasTimes = true;
+                times[iTime] = val;
+            }
+        }
+
+        if (!(dayName in curLotData.days)) {
+            curLotData.days[dayName] = {
+                percentFull: [null, null, null, null]
+            };
+        }
+        
+        curLotData.days[dayName].percentFull = times;
+    }
+
+    // Post the update.
+    fetch(`api/update/${lotIdToUpdate}`, {
+        method: 'PATCH',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(curLotData)
+    }).then(res => {
+        // Repopulate data.
+    });
+    // console.log('update lot!');
+}
+
+updateTimes.click(updateLot);
+
 function updateSelectLot(type, lot, lotId) {
     console.log(`update select ${type}, ${lot} ${lotId}`);
-    let times = [
-        '7am',
-        '11am',
-        '2pm',
-        '4pm',
-    ];
+    lotIdToUpdate = lot ? lotId : null;
 
     if (type && lot) {
         table.show();
@@ -78,20 +137,25 @@ function updateSelectLot(type, lot, lotId) {
         fetch(`api/get/${lotId}`)
             .then(res => res.json())
             .then(json => {
-                for (const [dayName, day] of Object.entries(json.days)) {
-                    if (!day.percentFull)
-                        continue;
-                    
-                    for (let iTime = 0; iTime < times.length; ++iTime) {
-                        let time = times[iTime];
-                        let box = $(`#${time}-${dayName}`);
+                console.log(JSON.stringify(json));
+                curLotData = json;
+                
+                for (const dayName of lotDays) {
+                    let times = [null, null, null, null];
 
-                        if (day.percentFull[iTime])
-                            box.val(day.percentFull[iTime]);
-
-                        // console.log(day.percentFull[iTime]);
+                    if (dayName in json.days) {
+                        const day = json.days[dayName];
+                        if (day.percentFull) {
+                            times = day.percentFull;
+                        }
                     }
-                    // json[day]
+
+                    for (let iTime = 0; iTime < times.length; ++iTime) {
+                        let timeId = lotTimes[iTime];
+                        let box = $(`#${timeId}-${dayName}`);
+                        // console.log(box.val());
+                        box.val(times[iTime] ? times[iTime] : "");
+                    }
                 }
             });
     }
